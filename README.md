@@ -22,8 +22,8 @@ This table is an overview of example implementations for server and client scrip
 
 | **Script** | Type | MCP Feature | Transport | Auth | Description |
 |-----------|-----------|-----------|-----------|----------------|-------|
-| io_api_server.py | Server | Tools | STDIO | None  | MCP Tools Server Weather API |
-| io_tools_client_bedrock.py  | Client | Tools | STDIO | None | AWS Bedrock integration (Converse API) for MCP Tools |
+| [io_api_server.py](#weather-data-server-io_api_serverpy) | Server | Tools | STDIO | None  | MCP Tools Server Weather API |
+| [io_tools_client_bedrock.py](#bedrock-ai-client-io_tools_client_bedrockpy)  | Client | Tools | STDIO | None | AWS Bedrock integration (Converse API) for MCP Tools |
 
 
 
