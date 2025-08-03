@@ -8,7 +8,6 @@ Get in touch to submit ideas, comments or new patterns.
 
 ## 🚀 What's Inside
 
-
 MCP Archetypes demonstrates implementations of MCP clients and servers using different frameworks, transports and authorization methods for different aspect of the MCP Specification.
 The server implementations use simple, repeated functionalities like calls to the weather.gov API, as presented in the excellent [Quickstart](https://modelcontextprotocol.io/quickstart/server) guide by the MCP Authors.
 
@@ -24,6 +23,8 @@ This table is an overview of example implementations for server and client scrip
 |-----------|-----------|-----------|-----------|----------------|-------|
 | [io_api_server.py](#weather-data-server-io_api_serverpy) | Server | Tools | STDIO | None  | MCP Tools Server Weather API |
 | [io_tools_client_bedrock.py](#bedrock-ai-client-io_tools_client_bedrockpy)  | Client | Tools | STDIO | None | AWS Bedrock integration (Converse API) for MCP Tools |
+| [io_resource_server.py](#weather-data-server-io_api_serverpy) | Server | Resources | STDIO | None  | Static and dynamic Resources |
+| [io_resources_client_bedrock.py](#bedrock-ai-client-io_tools_client_bedrockpy)  | Client | Resources | STDIO | None | AWS Bedrock integration (Converse API) for MCP Resources |
 
 
 
@@ -34,7 +35,7 @@ This table is an overview of example implementations for server and client scrip
 
 #### FastMCP Pattern
 - **Use Case**: High-performance servers with minimal boilerplate
-- **Benefits**: Built-in transport handling, automatic tool registration
+- **Benefits**: Built-in transport handling, automatic tool registration, provisioning of resources
 - **Best For**: Production services, API integrations
 
 #### Transport Flexibility
@@ -43,10 +44,13 @@ This table is an overview of example implementations for server and client scrip
 
 ### 2. **Client-Side Patterns**
 
-#### AI-Enhanced Client Pattern
-- **Use Case**: Natural language interfaces to technical tools
-- **Benefits**: User-friendly interaction, intelligent parameter inference
-- **Components**: LLM integration, tool schema translation, conversation management
+#### AWS Bedrock Integration
+- **Use Case**: Integration of FastMCP with Bedrock Models
+- **Components**: Different APIs, such as Converse API or Bedrock Agents
+
+#### FastMCP Pattern
+-  **Use Case**: High-performance clients with minimal boilerplate
+-  Rapid server connection and handling 
 
 #### Authentication Strategies
 - **AWS Bedrock**: Enterprise-grade AI with managed authentication
@@ -131,6 +135,86 @@ An intelligent MCP client that leverages AWS Bedrock's powerful language models 
 **🛡️Required Auth & Credentials**
 - Boto3 Client Config
     - Region
+- Environment variables
+    - AWS_BEARER_TOKEN_BEDROCK
+    
+    OR
+    
+    - Configured IAM Role for Service running the client
+
+    OR
+    
+    - Configured AWS CLI
+
+    OR
+    
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+
+
+### Resource Server (`io_resource_server.py`)
+A comprehensive MCP server that demonstrates both static and dynamic resource provisioning using the FastMCP framework.
+
+**🎯Features:**
+- **FastMCP Framework**: High-performance resource server implementation
+- **Static Resources**: File-based resources like documentation and configuration files
+- **Dynamic Resources**: Template-based resources with parameterized URIs
+- **Data Processing**: CSV file processing and JSON conversion capabilities
+- **Sales Data Management**: Monthly sales data access and analysis
+
+**📊Resources Provided:**
+- `README` - Static markdown documentation resource
+- `get_sales(year, month)` - Dynamic resource template for accessing monthly sales data
+
+**🔧Resource Types:**
+- **Static Resource**: README file served as a file resource with documentation metadata
+- **Resource Template**: Parameterized URI pattern `resource://sales/{year}/{month}` for dynamic sales data access
+
+**📁Example data:**
+- CSV files organized by month and year (e.g., `january_2024.csv`)
+- Automatic pandas DataFrame to JSON conversion
+- Error handling for missing data files
+
+**Transport**
+- Local I/O Transport (STDIO)
+
+**🛡️Required Auth & Credentials**
+- None
+
+
+### Bedrock AI Resource Client "Sales Analysus" (`io_resources_client_bedrock.py`)
+An intelligent MCP client that connects to resource servers and leverages AWS Bedrock AI models to analyze and interpret resource data related to sales statistics.
+
+**🎯Features:**
+- **Resource Discovery**: Automatic listing and discovery of available resources and resource templates
+- **AWS Bedrock Integration**: Utilizes Amazon models for natural language processing
+- **Sales Data Analysis**: Example client for analyzing monthly sales data
+- **Dynamic Resource Access**: Template-based resource retrieval with parameter substitution for reduced token usage
+- **AI-Powered Insights**: Natural language querying of structured data
+
+**🧠 AI Capabilities:**
+- **Natural Language Queries**: Ask questions about sales data in plain English
+- **Data Context Integration**: Combines resource documentation with data for enhanced analysis
+- **Intelligent Responses**: Contextual analysis based on sales data and user queries
+
+**🔧Resource Operations:**
+- `list_resources()` - Discover available static resources
+- `list_resource_templates()` - Find dynamic resource templates
+- `read_resource(uri)` - Fetch resource content
+- Template URI resolution with parameter substitution
+
+**📊Data Processing:**
+- CSV data retrieval and processing
+- Integration with Bedrock Converse API
+- System prompt construction with resource context
+- Error handling for missing or invalid data
+
+**Transport**
+- Local I/O Transport (STDIO)
+
+**🛡️Required Auth & Credentials**
+- Boto3 Client Config
+    - Region (us-east-1)
 - Environment variables
     - AWS_BEARER_TOKEN_BEDROCK
     
