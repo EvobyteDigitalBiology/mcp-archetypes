@@ -204,3 +204,5 @@ __marimo__/
 
 .vscode/
 *mcp.sh
+
+tests/*
