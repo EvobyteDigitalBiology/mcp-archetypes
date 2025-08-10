@@ -22,6 +22,7 @@ This table is an overview of example implementations for server and client scrip
 | **Script** | Type | MCP Feature | Transport | Auth | Description |
 |-----------|-----------|-----------|-----------|----------------|-------|
 | [io_api_server.py](#weather-data-server-io_api_serverpy) | Server | Tools | STDIO | None  | MCP Tools Server Weather API |
+| [io_api_sampling_server.py](#space-news-server-with-llm-translation-io_api_sampling_serverpy) | Server | Tools, Client Sampling | STDIO | None  | Space News API with LLM-powered translation |
 | [io_tools_client_bedrock.py](#bedrock-ai-client-io_tools_client_bedrockpy)  | Client | Tools | STDIO | None | AWS Bedrock integration (Converse API) for MCP Tools |
 | [io_resource_server.py](#weather-data-server-io_api_serverpy) | Server | Resources | STDIO | None  | Static and dynamic Resources |
 | [io_resources_client_bedrock.py](#bedrock-ai-client-io_tools_client_bedrockpy)  | Client | Resources | STDIO | None | AWS Bedrock integration (Converse API) for MCP Resources |
@@ -95,7 +96,7 @@ mcp.run(transport='http')
 
 ## 🌟 Details
 
-### Weather Data Server (`io_api_server.py`)
+### `io_api_server.py`: Weather Data Tool MCP Server
 A production-ready MCP server that provides comprehensive weather information using the National Weather Service API.
 
 **🎯Features:**
@@ -115,8 +116,7 @@ A production-ready MCP server that provides comprehensive weather information us
 **🛡️Required Auth & Credentials**
 - None
 
-
-### Bedrock AI Client (`io_tools_client_bedrock.py`)
+### `io_tools_client_bedrock.py`: Basic Bedrock AI Client with Tools Actions
 An intelligent MCP client that leverages AWS Bedrock's powerful language models to provide natural language interfaces to MCP tools.
 
 **🎯Features:**
@@ -152,7 +152,39 @@ An intelligent MCP client that leverages AWS Bedrock's powerful language models 
     - AWS_SECRET_ACCESS_KEY
 
 
-### Resource Server (`io_resource_server.py`)
+### `io_api_sampling_server.py`: Space News Server with Translation by LLM Sampling
+An advanced MCP server that provides current space news with intelligent multilingual translation capabilities using LLM sampling, provisioned by the MCP client.
+
+**🎯Features:**
+- **FastMCP Framework**: High-performance server implementation with modern async architecture
+- **Real-time Space News**: Fetches today's latest space news from SpaceflightNews API
+- **LLM Translation**: Automatic translation to any language using LLM sampling via MCP Context
+
+**🔧Tools Provided:**
+- `get_todays_spacenews(language='EN')` - Retrieve today's space news with optional language translation
+  - **Parameters**: 
+    - `language` (str): ISO639 language code (default: 'EN')
+  - **Returns**: JSON list with 'title' and 'summary' keys for each news article
+  - **Features**: Automatic LLM-powered translation for non-English languages
+
+**🛠️Technical Implementation:**
+- **Data Source**: SpaceflightNews API v4 (https://api.spaceflightnewsapi.net/)
+- **Translation Engine**: Context sampling with structured prompts and examples
+- **Output Format**: Standardized JSON structure for easy client consumption
+
+**📡API Details:**
+- **Endpoint**: `/v4/articles/?published_at_gte={date.isoformat()}`
+- **Response Processing**: Extracts title and summary from news articles
+
+**Transport**
+- Local I/O Transport (STDIO)
+
+**🛡️Required Auth & Credentials**
+- None (SpaceflightNews API is public)
+- LLM Context access required for translation features
+
+
+### `io_resource_server.py`: Standard MCP Resource Server
 A comprehensive MCP server that demonstrates both static and dynamic resource provisioning using the FastMCP framework.
 
 **🎯Features:**
@@ -182,7 +214,7 @@ A comprehensive MCP server that demonstrates both static and dynamic resource pr
 - None
 
 
-### Bedrock AI Resource Client "Sales Analysus" (`io_resources_client_bedrock.py`)
+### `io_resources_client_bedrock.py`: Bedrock AI Client "Sales Analysis" accessing MCP resources 
 An intelligent MCP client that connects to resource servers and leverages AWS Bedrock AI models to analyze and interpret resource data related to sales statistics.
 
 **🎯Features:**
@@ -255,6 +287,7 @@ We welcome contributions! Here's how you can help expand MCP Archetypes:
 - [FastMCP Documentation](https://github.com/jlowin/fastmcp)
 - [AWS Bedrock Developer Guide](https://docs.aws.amazon.com/bedrock/)
 - [National Weather Service API](https://weather-gov.github.io/api/)
+- [Spaceflight News API](https://spaceflightnewsapi.net/)
 
 ## 📄 License
 
