@@ -24,9 +24,11 @@ This table is an overview of example implementations for server and client scrip
 | [io_api_sampling_server.py](#ioasamplingserver) | Server | Tools, Client Sampling | STDIO | None  | Space News API with LLM-powered translation |
 | [io_resource_server.py](#ioresourceserver) | Server | Resources | STDIO | None  | Static and dynamic Resources |
 | [io_prompt_server.py](#iopromptserver) | Server | Prompts | STDIO | None  | Blog Generation Prompt Templates with Code Analysis |
+| [oauth_github_api_server.py](#oauthgithubapiserver) | Server | Tools | HTTP | GitHub OAuth | Weather API with GitHub OAuth authentication |
 | [io_tools_client_bedrock.py](#iotoolsclientbedrock)  | Client | Tools | STDIO | None | AWS Bedrock integration (Converse API) for MCP Tools |
 | [io_prompt_client_bedrock.py](#iopromptclientbedrock) | Client | Prompts | STDIO | None | AWS Bedrock using MCP Prompts |
 | [io_resources_client_bedrock.py](#ioresourcesclientbedrock)  | Client | Resources | STDIO | None | AWS Bedrock integration (Converse API) for MCP Resources |
+| [oauth_github_tools_client_bedrock.py](#oauthgithubtoolsclientbedrock) | Client | Tools | HTTP | GitHub OAuth | AWS Bedrock client with GitHub OAuth authentication |
 
 
 ## 🔧 Architecture Patterns
@@ -394,6 +396,132 @@ python io_prompt_client_bedrock.py server_script.py source_code.py
 - Developer relations content creation
 - Code repository documentation automation
 - Educational content generation from examples
+
+<hr>
+
+### `oauth_github_api_server.py`: Weather API Server with GitHub OAuth Authentication <a id="oauthgithubapiserver"></a>
+A production-ready MCP server that demonstrates secure authentication patterns using GitHub OAuth, providing weather information with user-specific access control.
+
+**🎯Features:**
+- **FastMCP Framework**: High-performance HTTP server implementation with built-in authentication
+- **GitHub OAuth Integration**: Secure user authentication via GitHub OAuth App workflow
+- **Protected Tools**: Weather tools accessible only to authenticated users
+- **User Context**: Access to authenticated user's GitHub profile information
+- **HTTP Transport**: Web-based server suitable for browser clients and web applications
+- **Debug Mode**: Comprehensive logging for development and troubleshooting
+
+**🔧Tools Provided:**
+- `get_user_info()` - Returns authenticated GitHub user information
+  - **Returns**: GitHub username, display name, and profile data
+  - **Authentication**: Requires valid GitHub OAuth token
+  
+- `get_alerts(state)` - Retrieve active weather alerts for any US state
+  - **Parameters**: `state` (str) - Two-letter US state code
+  - **Authentication**: Protected - requires GitHub authentication
+  
+- `get_forecast(latitude, longitude)` - Get detailed weather forecasts for specific coordinates
+  - **Parameters**: `latitude` (float), `longitude` (float)
+  - **Authentication**: Protected - requires GitHub authentication
+
+**🛠️Technical Implementation:**
+- **Authentication Provider**: FastMCP GitHubProvider with OAuth 2.0 flow
+- **Data Source**: National Weather Service API with proper User-Agent headers
+- **Transport**: HTTP server with CORS support and OAuth callback handling
+- **Security**: Token validation and user session management
+- **Error Handling**: Comprehensive error management for both auth and API calls
+
+**🔐OAuth Configuration:**
+- **GitHub OAuth App Setup**: Requires registered GitHub OAuth application
+- **Callback URL**: `http://localhost:8000/auth/callback` (configurable)
+- **Scopes**: User profile access for authentication
+- **Token Storage**: Secure token handling with expiration management
+
+**📡API Details:**
+- **Base URL**: `http://localhost:8000` (configurable)
+- **MCP Endpoint**: `/mcp` - Main MCP protocol endpoint
+- **Auth Endpoint**: `/auth/callback` - GitHub OAuth callback handler
+- **Weather API**: National Weather Service integration with rate limiting
+
+**Transport**
+- HTTP Transport (Port 8000)
+- OAuth callback handling
+- Web browser compatibility
+
+**🛡️Required Auth & Credentials**
+- **GitHub OAuth App**:
+  - `GITHUB_OAUTH_CLIENT_ID` - Your GitHub OAuth App Client ID
+  - `GITHUB_OAUTH_CLIENT_SECRET` - Your GitHub OAuth App Client Secret
+- **Environment Configuration**:
+  - OAuth App must be configured with correct callback URL
+  - Base URL must match OAuth App settings
+
+**🎯Use Cases:**
+- Multi-tenant applications
+- User-specific data access
+- Enterprise applications requiring user authentication
+- Development of authenticated MCP patterns
+
+<hr>
+
+### `oauth_github_tools_client_bedrock.py`: Bedrock AI Client with GitHub OAuth Authentication <a id="oauthgithubtoolsclientbedrock"></a>
+An intelligent MCP client that combines AWS Bedrock AI capabilities with GitHub OAuth authentication, providing secure access to weather tools through natural language interfaces.
+
+**🎯Features:**
+- **FastMCP Client Integration**: HTTP-based connection to OAuth-protected MCP servers
+- **GitHub OAuth Flow**: Automatic browser-based authentication with GitHub
+- **AWS Bedrock AI**: Advanced natural language processing using Amazon Nova Lite model
+- **Authenticated Tool Access**: Secure access to protected weather tools
+- **Interactive Chat Interface**: Natural language weather queries with AI processing
+- **User Context**: Access to authenticated user's GitHub profile information
+
+**🧠 AI-Powered Workflow:**
+
+**1. Authentication Phase:**
+- **OAuth Initialization**: Automatic GitHub OAuth flow initiation
+- **Browser Authentication**: Opens GitHub login in default browser
+- **Token Management**: Secure token storage and validation
+- **User Profile**: Retrieves and displays authenticated user information
+
+**2. Tool Discovery Phase:**
+
+**3. Query Processing Phase:**
+
+**🔧Client Operations:**
+
+**🛠️Technical Implementation:**
+- **AI Model**: Amazon Nova Lite (amazon.nova-lite-v1:0) via AWS Bedrock
+- **Authentication**: FastMCP OAuth provider with GitHub integration
+- **Transport**: HTTP with OAuth token authentication
+
+**📝Complete Workflow Example:**
+```bash
+python oauth_github_tools_client_bedrock.py
+```
+
+**🔐Authentication Flow:**
+- **First Run**: Automatically opens GitHub OAuth consent screen
+- **Token Storage**: Securely stores OAuth tokens for subsequent runs
+- **Token Refresh**: Handles token expiration and refresh automatically
+- **User Verification**: Validates user identity before tool access
+
+**Transport**
+- HTTP Transport with OAuth Authentication
+
+**🛡️Required Auth & Credentials**
+- **GitHub OAuth App**:
+  - Must match server's OAuth configuration
+  - User must authorize the OAuth application
+- **AWS Bedrock Access**:
+  - Boto3 Client Config (Region: us-east-1)
+  - Amazon Nova Lite model access permissions
+- **Environment Variables**:
+  - AWS credentials (IAM role, CLI, or environment variables)
+  - Optional: `.env` file support for credential management
+
+**🎯Use Cases:**
+- Secure multi-user applications
+- Enterprise AI assistants with user authentication
+- Development of authenticated conversational interfaces
     
 
 ## 🤝 Contributing
